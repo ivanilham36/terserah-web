@@ -1,0 +1,53 @@
+body {
+  background: #f5f6fb;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #5b3df5 !important;
+}
+
+.btn-brand {
+  background: #5b3df5;
+  border-color: #5b3df5;
+  color: #fff;
+}
+
+.btn-brand:hover,
+.btn-brand:disabled {
+  background: #4a30d4;
+  border-color: #4a30d4;
+  color: #fff;
+}
+
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ece8ff 0%, #f5f6fb 60%);
+}
+
+.card-soft {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(40, 30, 100, 0.08);
+}
+
+.room-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(40, 30, 100, 0.14);
+}
+
+.room-code {
+  font-family: monospace;
+  letter-spacing: 2px;
+  background: #ece8ff;
+  color: #4a30d4;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
