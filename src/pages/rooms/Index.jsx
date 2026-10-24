@@ -74,14 +74,19 @@ function RoomsIndex() {
     <Layout>
       <div className="row g-4">
         <div className="col-lg-8">
-          <h4 className="fw-bold mb-3">Ruang saya</h4>
+          <div className="page-head">
+            <h1 className="page-title">Ruang saya</h1>
+            <p className="page-sub">Tempat kelompokmu memutuskan bareng.</p>
+          </div>
 
           {loading && <p className="text-muted">Memuat...</p>}
 
           {!loading && rooms.length === 0 && (
             <div className="card card-soft">
-              <div className="card-body text-center text-muted py-5">
-                Belum ada ruang. Buat ruang baru atau gabung dengan kode dari temanmu.
+              <div className="empty-state">
+                <div className="empty-icon">+</div>
+                <div className="fw-bold text-dark mb-1">Belum ada ruang</div>
+                Buat ruang baru atau gabung dengan kode dari temanmu.
               </div>
             </div>
           )}
@@ -92,18 +97,23 @@ function RoomsIndex() {
                 <Link to={`/rooms/${room.id}`} className="text-decoration-none text-dark">
                   <div className="card card-soft room-card h-100">
                     <div className="card-body">
-                      <div className="d-flex justify-content-between align-items-start">
-                        <h5 className="fw-bold mb-1">{room.name}</h5>
-                        <span
-                          className={`badge ${room.status === 'decided' ? 'bg-success' : 'bg-warning text-dark'}`}
-                        >
+                      <div className="d-flex align-items-center gap-3 mb-3">
+                        <span className="cat-dot">{(room.category || '?').charAt(0)}</span>
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                          <div className="fw-bold text-truncate" style={{ letterSpacing: '-0.015em', fontSize: '1.05rem' }}>
+                            {room.name}
+                          </div>
+                          <div className="text-muted small">
+                            {room.category} &middot; oleh {room.owner?.name}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="room-code">{room.code}</span>
+                        <span className={`status-dot ${room.status === 'decided' ? 'done' : ''}`}>
                           {room.status === 'decided' ? 'Sudah diputuskan' : 'Terbuka'}
                         </span>
                       </div>
-                      <div className="text-muted small mb-2">
-                        {room.category} - oleh {room.owner?.name}
-                      </div>
-                      <span className="room-code">{room.code}</span>
                     </div>
                   </div>
                 </Link>
@@ -115,7 +125,7 @@ function RoomsIndex() {
         <div className="col-lg-4">
           <div className="card card-soft mb-3">
             <div className="card-body">
-              <h6 className="fw-bold mb-3">Buat ruang baru</h6>
+              <h6 className="fw-bold mb-3" style={{ fontSize: "1rem" }}>Buat ruang baru</h6>
               <form onSubmit={createHandler}>
                 <input
                   className="form-control mb-2"
@@ -168,7 +178,7 @@ function RoomsIndex() {
                   maxLength={8}
                   required
                 />
-                <button className="btn btn-outline-secondary w-100" type="submit">
+                <button className="btn btn-ghost w-100" type="submit">
                   Gabung
                 </button>
               </form>

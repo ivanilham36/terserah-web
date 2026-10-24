@@ -6,14 +6,17 @@ import Api from '../api'
 //import js cookie
 import Cookies from 'js-cookie'
 //hook link
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { notifySuccess } from '../utils/notify'
+import { Wordmark } from '../components/common/Logo'
+import { ThemeToggle } from '../utils/theme'
 
 const Layout = ({ children }) => {
   //state user
   const [user, setUser] = useState({})
-  //navigate
+  //navigate & lokasi saat ini (untuk menu aktif)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   //ambil data user yang login
   useEffect(() => {
@@ -38,33 +41,49 @@ const Layout = ({ children }) => {
     navigate('/login')
   }
 
+  const initial = (user.name || '?').trim().charAt(0).toUpperCase()
+
   return (
     <React.Fragment>
-      <Navbar bg="white" expand="md" className="shadow-sm mb-4">
+      <Navbar expand="md" className="app-nav mb-4">
         <Container>
-          <Navbar.Brand as={Link} to="/rooms" className="brand fs-4">
-            Terserah!
+          <Navbar.Brand as={Link} to="/rooms">
+            <Wordmark />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-nav" />
           <Navbar.Collapse id="main-nav">
-            <Nav className="me-auto">
-              <Nav.Link as={Link} to="/rooms">
+            <Nav className="me-auto ms-md-3">
+              <Nav.Link as={Link} to="/rooms" active={pathname.startsWith('/rooms')}>
                 Ruang
               </Nav.Link>
-              <Nav.Link as={Link} to="/options">
+              <Nav.Link as={Link} to="/options" active={pathname.startsWith('/options')}>
                 Katalog Opsi
               </Nav.Link>
             </Nav>
-            <Nav>
-              <NavDropdown title={user.name || 'Akun'} align="end">
-                <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+            <Nav className="flex-row align-items-center gap-3 mt-3 mt-md-0">
+              <ThemeToggle />
+              <NavDropdown
+                align="end"
+                title={
+                  <span className="avatar-btn">
+                    <span className="avatar">{initial}</span>
+                    <span className="d-md-none">{user.name || 'Akun'}</span>
+                  </span>
+                }
+              >
+                <NavDropdown.Item as="div" className="small text-muted" style={{ pointerEvents: 'none' }}>
+                  {user.email}
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={logoutHandler}>Keluar</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      <Container className="pb-5">{children}</Container>
+      <Container className="pb-5" style={{ maxWidth: 1080 }}>
+        {children}
+      </Container>
     </React.Fragment>
   )
 }

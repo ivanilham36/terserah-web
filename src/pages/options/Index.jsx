@@ -104,10 +104,13 @@ function OptionsIndex() {
 
   return (
     <Layout>
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        <h4 className="fw-bold mb-0">Katalog Opsi</h4>
+      <div className="page-head d-flex flex-wrap justify-content-between align-items-end gap-3">
+        <div>
+          <h1 className="page-title">Katalog Opsi</h1>
+          <p className="page-sub">Kumpulan pilihan yang bisa dipakai di ruang mana pun.</p>
+        </div>
         <button className="btn btn-brand" onClick={openCreate}>
-          Tambah opsi
+          + Tambah opsi
         </button>
       </div>
 
@@ -138,7 +141,7 @@ function OptionsIndex() {
           </select>
         </div>
         <div className="col-md-2">
-          <button className="btn btn-outline-secondary w-100" type="submit">
+          <button className="btn btn-ghost w-100" type="submit">
             Cari
           </button>
         </div>
@@ -148,17 +151,23 @@ function OptionsIndex() {
 
       {!loading && items.length === 0 && (
         <div className="card card-soft">
-          <div className="card-body text-center text-muted py-5">Tidak ada opsi yang cocok.</div>
+          <div className="empty-state">
+            <div className="empty-icon">?</div>
+            <div className="fw-bold text-dark mb-1">Tidak ada opsi yang cocok</div>
+            Coba kata kunci atau kategori lain.
+          </div>
         </div>
       )}
 
       <div className="row g-3">
         {items.map((option) => (
           <div className="col-md-6" key={option.id}>
-            <div className="card card-soft h-100">
+            <div className="card card-soft room-card h-100">
               <div className="card-body">
-                <div className="d-flex justify-content-between align-items-start">
-                  <h6 className="fw-bold mb-1">{option.title}</h6>
+                <div className="d-flex justify-content-between align-items-start gap-2">
+                  <h6 className="fw-bold mb-1" style={{ fontSize: '1.02rem', letterSpacing: '-0.015em' }}>
+                    {option.title}
+                  </h6>
                   <span className="badge bg-secondary">{option.category}</span>
                 </div>
                 <div className="small text-muted mb-2">
@@ -170,7 +179,7 @@ function OptionsIndex() {
                 {option.description && <p className="small mb-2">{option.description}</p>}
                 <div className="mb-3">
                   {(option.tags || []).map((t) => (
-                    <span className="badge bg-light text-dark border me-1" key={t}>
+                    <span className="badge bg-light me-1" key={t}>
                       {t}
                     </span>
                   ))}

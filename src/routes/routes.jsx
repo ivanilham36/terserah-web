@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import PrivateRoute from './PrivateRoutes'
 
 //import pages
+import Landing from '../pages/Landing.jsx'
 import Login from '../pages/Login.jsx'
 import Register from '../pages/Register.jsx'
 import RoomsIndex from '../pages/rooms/Index.jsx'
@@ -14,7 +15,9 @@ import OptionsIndex from '../pages/options/Index.jsx'
 function RoutesIndex() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/rooms" replace />} />
+      <Route path="/" element={<Landing />} />
+      {/* rute tidak dikenal kembali ke beranda */}
+      <Route path="*" element={<Navigate to="/" replace />} />
 
       {/* route publik */}
       <Route path="/login" element={<Login />} />

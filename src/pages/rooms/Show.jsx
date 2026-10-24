@@ -127,40 +127,40 @@ function RoomShow() {
   return (
     <Layout>
       <div className="mb-3">
-        <Link to="/rooms" className="small text-decoration-none">
+        <Link to="/rooms" className="small fw-semibold">
           &larr; Semua ruang
         </Link>
       </div>
 
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
+      <div className="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-          <h3 className="fw-bold mb-1">{room.name}</h3>
+          <h1 className="page-title mb-2">{room.name}</h1>
           <span className="badge bg-secondary me-2">{room.category}</span>
-          <span className={`badge ${open ? 'bg-warning text-dark' : 'bg-success'}`}>
-            {open ? 'Terbuka' : 'Sudah diputuskan'}
-          </span>
+          <span className={`status-dot ${open ? '' : 'done'}`}>{open ? 'Terbuka' : 'Sudah diputuskan'}</span>
         </div>
-        <div className="text-end">
-          <div className="small text-muted">Kode undangan</div>
-          <span className="room-code fs-5">{room.code}</span>
+        <div className="text-md-end">
+          <div className="small text-muted mb-1">Kode undangan</div>
+          <span className="room-code" style={{ fontSize: '1.05rem', padding: '5px 14px' }}>
+            {room.code}
+          </span>
         </div>
       </div>
 
       {deciding && <div className="alert alert-info">AI sedang menuliskan alasan keputusan...</div>}
 
       {!open && room.decided_option && (
-        <div className="card card-soft mb-4" style={{ borderLeft: '5px solid #198754' }}>
-          <div className="card-body">
-            <div className="text-muted small">Keputusan kelompok</div>
-            <h4 className="fw-bold mb-2">{room.decided_option.title}</h4>
-            {room.decision_reason && <p className="mb-0">{room.decision_reason}</p>}
-          </div>
+        <div className="decision-card mb-4">
+          <div className="decision-kicker">Keputusan kelompok &#10003;</div>
+          <h2 className="decision-title">{room.decided_option.title}</h2>
+          {room.decision_reason && (
+            <p className="mb-0">{room.decision_reason}</p>
+          )}
         </div>
       )}
 
       <div className="row g-4">
         <div className="col-lg-7">
-          <h5 className="fw-bold mb-3">Ranking kandidat</h5>
+          <div className="eyebrow-mono mb-3">Ranking kandidat</div>
           <RankingList
             ranked={rec.ranked}
             excluded={rec.excluded}
@@ -183,7 +183,7 @@ function RoomShow() {
                 <div className="d-flex justify-content-between small py-1" key={m.id}>
                   <span>
                     {m.name}
-                    {m.id === room.owner_id && <span className="badge bg-light text-dark border ms-1">pemilik</span>}
+                    {m.id === room.owner_id && <span className="badge bg-light ms-1">pemilik</span>}
                   </span>
                   <span className="text-muted">{m.pivot.pref_text ? 'sudah isi preferensi' : 'belum isi preferensi'}</span>
                 </div>

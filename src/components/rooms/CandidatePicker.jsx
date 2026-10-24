@@ -119,8 +119,7 @@ function CandidatePicker({ room, onChanged }) {
               <button
                 type="button"
                 className={`nav-link py-1 px-3 ${tab === key ? 'active' : ''}`}
-                style={tab === key ? { background: '#5b3df5' } : {}}
-                onClick={() => setTab(key)}
+                                onClick={() => setTab(key)}
               >
                 {label}
               </button>
@@ -185,7 +184,7 @@ function CandidatePicker({ room, onChanged }) {
                 <div className="small text-muted">{item.description}</div>
                 <div>
                   {(item.tags || []).map((t) => (
-                    <span className="badge bg-light text-dark border me-1" key={t}>
+                    <span className="badge bg-light me-1" key={t}>
                       {t}
                     </span>
                   ))}
