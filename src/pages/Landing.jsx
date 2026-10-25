@@ -354,15 +354,7 @@ function Landing() {
           </section>
 
           <footer className="lp-footer">
-            <span>&copy; 2026 Terserah! Capstone Pengembangan Aplikasi Web Lanjut, Universitas ASA Indonesia.</span>
-            <span className="d-flex gap-3">
-              <a href="https://github.com/ivanilham36/terserah-web" target="_blank" rel="noreferrer">
-                Frontend
-              </a>
-              <a href="https://github.com/ivanilham36/terserah-api" target="_blank" rel="noreferrer">
-                Backend
-              </a>
-            </span>
+            <span>&copy; 2026 Terserah!</span>
           </footer>
         </div>
       </main>
