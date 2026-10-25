@@ -1071,3 +1071,11 @@ label, .form-label {
 .map-pin-me { background: #4f8cff; color: #fff; }
 .leaflet-container { font-family: inherit; }
 .place-row:hover { background: color-mix(in srgb, var(--lime) 12%, transparent); }
+
+[data-theme='dark'] .place-map .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9) saturate(0.7);
+}
+[data-theme='dark'] .place-map .leaflet-control-attribution {
+  background: rgba(20, 20, 18, 0.8);
+  color: #aaa;
+}

@@ -197,7 +197,7 @@ function OptionsIndex() {
                       className="btn btn-sm btn-outline-secondary"
                       target="_blank"
                       rel="noreferrer"
-                      href={`https://www.google.com/maps/search/?api=1&query=${option.lat},${option.lng}`}
+                      href={`https://www.google.com/maps/search/${encodeURIComponent(option.title)}/@${option.lat},${option.lng},17z`}
                     >
                       Buka peta
                     </a>

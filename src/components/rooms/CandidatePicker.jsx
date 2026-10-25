@@ -52,6 +52,7 @@ function CandidatePicker({ room, onChanged }) {
 
   //pakai lokasi perangkat
   const useMyLocation = () => {
+    if (coords) return setCoords(null) //klik lagi = matikan
     if (!navigator.geolocation) return notifyError('Browser tidak mendukung lokasi.')
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -192,9 +193,10 @@ function CandidatePicker({ room, onChanged }) {
         {tab === 'places' && (
           <div>
             <form onSubmit={searchPlaces}>
+              <label className="small mb-1">Di mana? (nama daerah atau kota)</label>
               <input
                 className="form-control mb-2"
-                placeholder="Area, mis. Kemang Jakarta"
+                placeholder="mis. Kemang Jakarta"
                 value={area}
                 onChange={(e) => {
                   setArea(e.target.value)
@@ -203,7 +205,7 @@ function CandidatePicker({ room, onChanged }) {
               />
               <div className="d-flex gap-2 mb-2">
                 <button type="button" className={`btn btn-sm ${coords ? 'btn-brand' : 'btn-ghost'}`} onClick={useMyLocation}>
-                  {coords ? 'Lokasiku dipakai' : 'Pakai lokasiku'}
+                  {coords ? 'Lokasiku dipakai \u2713' : 'Pakai lokasiku'}
                 </button>
                 <select className="form-select form-select-sm" value={radius} onChange={(e) => setRadius(Number(e.target.value))}>
                   <option value={1000}>1 km</option>
@@ -212,10 +214,11 @@ function CandidatePicker({ room, onChanged }) {
                   <option value={10000}>10 km</option>
                 </select>
               </div>
+              <label className="small mb-1">Cari nama tertentu? (opsional)</label>
               <div className="input-group mb-2">
                 <input
                   className="form-control"
-                  placeholder="Filter nama (opsional)"
+                  placeholder="mis. nasi goreng, sate"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
@@ -246,7 +249,7 @@ function CandidatePicker({ room, onChanged }) {
                     className="small"
                     target="_blank"
                     rel="noreferrer"
-                    href={`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`}
+                    href={`https://www.google.com/maps/search/${encodeURIComponent(p.title)}/@${p.lat},${p.lng},17z`}
                   >
                     Cek rating di Google Maps
                   </a>
