@@ -40,7 +40,7 @@ function GoogleButton() {
         size: 'large',
         shape: 'pill',
         text: 'continue_with',
-        width: Math.min(box.current.offsetWidth || 320, 400),
+        width: 320,
       })
     }
 
@@ -85,7 +85,8 @@ function GoogleButton() {
         atau
         <hr className="flex-grow-1 m-0" />
       </div>
-      <div ref={box} className="d-flex justify-content-center" style={{ minHeight: 44 }} />
+      {/* color-scheme: light agar iframe Google transparan (tanpa kotak putih) di mode gelap */}
+      <div ref={box} className="d-flex justify-content-center" style={{ minHeight: 44, colorScheme: 'light' }} />
     </div>
   )
 }
