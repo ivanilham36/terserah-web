@@ -5,6 +5,8 @@ import Api from '../../api'
 import Layout from '../../layouts/Layout'
 //import react router dom
 import { Link, useNavigate } from 'react-router-dom'
+import { confirmAlert } from 'react-confirm-alert'
+import 'react-confirm-alert/src/react-confirm-alert.css'
 import { notifySuccess, notifyError, errorMessage } from '../../utils/notify'
 
 const CATEGORIES = ['makanan', 'film', 'liburan', 'hadiah', 'lainnya']
@@ -22,6 +24,7 @@ function RoomsIndex() {
   const [category, setCategory] = useState('makanan')
   const [useLocation, setUseLocation] = useState(false)
   const [code, setCode] = useState('')
+  const [meId, setMeId] = useState(null)
 
   //ambil daftar ruang
   const fetchRooms = async () => {
@@ -37,7 +40,38 @@ function RoomsIndex() {
 
   useEffect(() => {
     fetchRooms()
+    Api.get('/api/auth/me')
+      .then((r) => setMeId(r.data.id))
+      .catch(() => {})
   }, [])
+
+  //hapus ruang (pemilik) atau keluar (anggota)
+  const removeHandler = (e, room) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const owner = room.owner_id === meId
+    confirmAlert({
+      title: owner ? 'Hapus ruang?' : 'Keluar dari ruang?',
+      message: owner
+        ? `"${room.name}" beserta kandidat dan suaranya akan dihapus untuk semua anggota.`
+        : `Kamu tidak akan lagi melihat "${room.name}" dan suaramu dihapus.`,
+      buttons: [
+        {
+          label: owner ? 'Ya, hapus' : 'Ya, keluar',
+          onClick: async () => {
+            try {
+              await Api.delete(owner ? `/api/rooms/${room.id}` : `/api/rooms/${room.id}/members/me`)
+              notifySuccess(owner ? 'Ruang dihapus.' : 'Kamu sudah keluar.')
+              fetchRooms()
+            } catch (error) {
+              notifyError(errorMessage(error))
+            }
+          },
+        },
+        { label: 'Batal' },
+      ],
+    })
+  }
 
   //buat ruang baru
   const createHandler = async (e) => {
@@ -110,8 +144,13 @@ function RoomsIndex() {
                       </div>
                       <div className="d-flex justify-content-between align-items-center">
                         <span className="room-code">{room.code}</span>
-                        <span className={`status-dot ${room.status === 'decided' ? 'done' : ''}`}>
-                          {room.status === 'decided' ? 'Sudah diputuskan' : 'Terbuka'}
+                        <span className="d-flex align-items-center gap-3">
+                          <span className={`status-dot ${room.status === 'decided' ? 'done' : ''}`}>
+                            {room.status === 'decided' ? 'Sudah diputuskan' : 'Terbuka'}
+                          </span>
+                          <button type="button" className="btn btn-sm btn-outline-danger py-0" onClick={(e) => removeHandler(e, room)}>
+                            {room.owner_id === meId ? 'Hapus' : 'Keluar'}
+                          </button>
                         </span>
                       </div>
                     </div>

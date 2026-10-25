@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 //import react router dom
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 //import react confirm alert
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
@@ -13,9 +13,13 @@ import { notifySuccess, notifyError, errorMessage } from '../../utils/notify'
 import PreferenceForm from '../../components/rooms/PreferenceForm'
 import CandidatePicker from '../../components/rooms/CandidatePicker'
 import RankingList from '../../components/rooms/RankingList'
+import PlaceMap from '../../components/common/PlaceMap'
+import ReviewModal from '../../components/options/ReviewModal'
 
 function RoomShow() {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const [reviewing, setReviewing] = useState(false)
 
   //state
   const [room, setRoom] = useState(null)
@@ -98,6 +102,45 @@ function RoomShow() {
     }
   }
 
+  //hapus ruang (pemilik) atau keluar (anggota)
+  const leaveHandler = () => {
+    confirmAlert({
+      title: isOwner ? 'Hapus ruang ini?' : 'Keluar dari ruang?',
+      message: isOwner
+        ? 'Ruang, kandidat, dan semua suara akan dihapus untuk semua anggota. Tempatnya tetap tersimpan di "Tempat saya".'
+        : 'Suaramu di ruang ini ikut dihapus.',
+      buttons: [
+        {
+          label: isOwner ? 'Ya, hapus' : 'Ya, keluar',
+          onClick: async () => {
+            try {
+              await Api.delete(isOwner ? `/api/rooms/${room.id}` : `/api/rooms/${room.id}/members/me`)
+              notifySuccess(isOwner ? 'Ruang dihapus.' : 'Kamu sudah keluar.')
+              navigate('/rooms')
+            } catch (err) {
+              notifyError(errorMessage(err))
+            }
+          },
+        },
+        { label: 'Batal' },
+      ],
+    })
+  }
+
+  //titik peta: semua kandidat yang punya koordinat, bernomor sesuai ranking
+  const rankOf = {}
+  rec.ranked.forEach((r, i) => (rankOf[r.option_id] = i + 1))
+  const mapMarkers = (room.options || [])
+    .filter((o) => o.lat != null && o.lng != null)
+    .map((o) => ({
+      id: o.id,
+      lat: o.lat,
+      lng: o.lng,
+      title: o.title,
+      kind: room.decided_option_id === o.id ? 'candidate' : 'result',
+      label: rankOf[o.id] || '',
+    }))
+
   //putuskan (khusus pemilik ruang), dengan konfirmasi
   const decideHandler = (item) => {
     confirmAlert({
@@ -143,6 +186,11 @@ function RoomShow() {
           <span className="room-code" style={{ fontSize: '1.05rem', padding: '5px 14px' }}>
             {room.code}
           </span>
+          <div className="mt-2">
+            <button className="btn btn-sm btn-outline-danger" onClick={leaveHandler}>
+              {isOwner ? 'Hapus ruang' : 'Keluar dari ruang'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -153,8 +201,11 @@ function RoomShow() {
           <div className="decision-kicker">Keputusan kelompok &#10003;</div>
           <h2 className="decision-title">{room.decided_option.title}</h2>
           {room.decision_reason && (
-            <p className="mb-0">{room.decision_reason}</p>
+            <p className="mb-3">{room.decision_reason}</p>
           )}
+          <button className="btn btn-ghost btn-sm" onClick={() => setReviewing(true)}>
+            Sudah ke sana? Beri ulasan
+          </button>
         </div>
       )}
 
@@ -174,6 +225,12 @@ function RoomShow() {
         </div>
 
         <div className="col-lg-5">
+          {mapMarkers.length > 0 && (
+            <div className="mb-3">
+              <div className="eyebrow-mono mb-2">Peta kandidat</div>
+              <PlaceMap markers={mapMarkers} height={240} />
+            </div>
+          )}
           {open && <PreferenceForm room={room} member={myMember} onSaved={load} />}
 
           <div className="card card-soft mb-3">
@@ -194,6 +251,15 @@ function RoomShow() {
           {open && <CandidatePicker room={room} onChanged={load} />}
         </div>
       </div>
+      <ReviewModal
+        show={reviewing}
+        onHide={() => setReviewing(false)}
+        option={room.decided_option}
+        onSaved={() => {
+          setReviewing(false)
+          load()
+        }}
+      />
     </Layout>
   )
 }

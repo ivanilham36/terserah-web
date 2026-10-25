@@ -50,12 +50,6 @@ function Login() {
       })
   }
 
-  //isi otomatis dengan akun demo dari seeder
-  const fillDemo = () => {
-    setEmail('amy@terserah.test')
-    setPassword('password')
-  }
-
   //sudah login, langsung arahkan ke halaman ruang
   if (Cookies.get('token')) {
     return <Navigate to="/rooms" replace />
@@ -79,7 +73,12 @@ function Login() {
         />
         {validation.errors?.email && <div className="text-danger small mb-2">{validation.errors.email[0]}</div>}
 
-        <label className="mb-1 mt-3">Password</label>
+        <div className="d-flex justify-content-between align-items-end mt-3">
+          <label className="mb-1">Password</label>
+          <Link to="/forgot-password" className="small mb-1">
+            Lupa password?
+          </Link>
+        </div>
         <input
           type="password"
           className="form-control mb-1"
@@ -96,13 +95,8 @@ function Login() {
         </button>
       </form>
 
-      <div className="d-flex justify-content-between align-items-center mt-3 small">
-        <span>
-          Belum punya akun? <Link to="/register">Daftar</Link>
-        </span>
-        <button type="button" className="demo-link" onClick={fillDemo}>
-          Pakai akun demo
-        </button>
+      <div className="mt-3 small">
+        Belum punya akun? <Link to="/register">Daftar</Link>
       </div>
     </AuthShell>
   )

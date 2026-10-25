@@ -8,6 +8,7 @@ import PrivateRoute from './PrivateRoutes'
 import Landing from '../pages/Landing.jsx'
 import Login from '../pages/Login.jsx'
 import Register from '../pages/Register.jsx'
+import ForgotPassword from '../pages/ForgotPassword.jsx'
 import RoomsIndex from '../pages/rooms/Index.jsx'
 import RoomShow from '../pages/rooms/Show.jsx'
 import OptionsIndex from '../pages/options/Index.jsx'
@@ -22,6 +23,7 @@ function RoutesIndex() {
       {/* route publik */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* private route */}
       <Route

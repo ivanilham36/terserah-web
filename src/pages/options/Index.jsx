@@ -15,7 +15,7 @@ const PRICE = ['', 'Murah', 'Sedang', 'Agak mahal', 'Mahal']
 
 function OptionsIndex() {
   //title page
-  document.title = 'Katalog Opsi - Terserah!'
+  document.title = 'Tempat saya - Terserah!'
 
   //state
   const [me, setMe] = useState(null)
@@ -36,7 +36,7 @@ function OptionsIndex() {
     setLoading(true)
     try {
       const response = await Api.get('/api/options', {
-        params: { page, q: query || undefined, category: category || undefined },
+        params: { scope: 'mine', page, q: query || undefined, category: category || undefined },
       })
       setItems(response.data.data)
       setMeta({
@@ -82,15 +82,15 @@ function OptionsIndex() {
   //hapus dengan konfirmasi
   const deleteHandler = (option) => {
     confirmAlert({
-      title: 'Hapus opsi?',
-      message: `"${option.title}" akan dihapus dari katalog dan semua ruang.`,
+      title: 'Hapus tempat?',
+      message: `"${option.title}" akan dihapus dari semua ruang.`,
       buttons: [
         {
           label: 'Ya, hapus',
           onClick: async () => {
             try {
               await Api.delete(`/api/options/${option.id}`)
-              notifySuccess('Opsi dihapus.')
+              notifySuccess('Tempat dihapus.')
               fetchData()
             } catch (error) {
               notifyError(errorMessage(error))
@@ -106,11 +106,14 @@ function OptionsIndex() {
     <Layout>
       <div className="page-head d-flex flex-wrap justify-content-between align-items-end gap-3">
         <div>
-          <h1 className="page-title">Katalog Opsi</h1>
-          <p className="page-sub">Kumpulan pilihan yang bisa dipakai di ruang mana pun.</p>
+          <h1 className="page-title">Tempat saya</h1>
+          <p className="page-sub">
+            Semua tempat yang pernah jadi kandidat di ruangmu. Setelah kamu pergi, beri ulasan: rating itu ikut dihitung
+            di ruang berikutnya.
+          </p>
         </div>
         <button className="btn btn-brand" onClick={openCreate}>
-          + Tambah opsi
+          + Tambah manual
         </button>
       </div>
 
@@ -118,7 +121,7 @@ function OptionsIndex() {
         <div className="col-md-6">
           <input
             className="form-control"
-            placeholder="Cari nama opsi"
+            placeholder="Cari nama tempat"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -153,8 +156,8 @@ function OptionsIndex() {
         <div className="card card-soft">
           <div className="empty-state">
             <div className="empty-icon">?</div>
-            <div className="fw-bold text-dark mb-1">Tidak ada opsi yang cocok</div>
-            Coba kata kunci atau kategori lain.
+            <div className="fw-bold text-dark mb-1">Belum ada tempat</div>
+            Cari tempat nyata dari dalam sebuah ruang, nanti otomatis tersimpan di sini.
           </div>
         </div>
       )}
@@ -168,7 +171,7 @@ function OptionsIndex() {
                   <h6 className="fw-bold mb-1" style={{ fontSize: '1.02rem', letterSpacing: '-0.015em' }}>
                     {option.title}
                   </h6>
-                  <span className="badge bg-secondary">{option.category}</span>
+                  <span className="badge bg-secondary">{option.source === 'osm' ? 'peta' : option.category}</span>
                 </div>
                 <div className="small text-muted mb-2">
                   {PRICE[option.price_level]} -{' '}
@@ -176,6 +179,7 @@ function OptionsIndex() {
                     ? `${Number(option.reviews_avg_rating).toFixed(1)} / 5 (${option.reviews_count} ulasan)`
                     : 'belum ada ulasan'}
                 </div>
+                {option.address && <div className="small mb-2">{option.address}</div>}
                 {option.description && <p className="small mb-2">{option.description}</p>}
                 <div className="mb-3">
                   {(option.tags || []).map((t) => (
@@ -186,8 +190,18 @@ function OptionsIndex() {
                 </div>
                 <div className="d-flex gap-2">
                   <button className="btn btn-sm btn-outline-primary" onClick={() => setReviewing(option)}>
-                    Ulas
+                    Beri ulasan
                   </button>
+                  {option.lat != null && (
+                    <a
+                      className="btn btn-sm btn-outline-secondary"
+                      target="_blank"
+                      rel="noreferrer"
+                      href={`https://www.google.com/maps/search/?api=1&query=${option.lat},${option.lng}`}
+                    >
+                      Buka peta
+                    </a>
+                  )}
                   {canManage(option) && (
                     <React.Fragment>
                       <button className="btn btn-sm btn-outline-secondary" onClick={() => openEdit(option)}>
@@ -215,7 +229,7 @@ function OptionsIndex() {
             Sebelumnya
           </button>
           <span className="small text-muted">
-            Halaman {meta.current_page} dari {meta.last_page} ({meta.total} opsi)
+            Halaman {meta.current_page} dari {meta.last_page} ({meta.total} tempat)
           </span>
           <button
             className="btn btn-sm btn-outline-secondary"

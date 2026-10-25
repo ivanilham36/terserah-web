@@ -57,7 +57,7 @@ const Layout = ({ children }) => {
                 Ruang
               </Nav.Link>
               <Nav.Link as={Link} to="/options" active={pathname.startsWith('/options')}>
-                Katalog Opsi
+                Tempat saya
               </Nav.Link>
             </Nav>
             <Nav className="flex-row align-items-center gap-3 mt-3 mt-md-0">

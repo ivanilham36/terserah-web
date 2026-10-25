@@ -674,19 +674,6 @@ label, .form-label {
   color: #121210;
 }
 .auth-side p { color: #2b2a22; max-width: 26rem; margin: 0; font-weight: 500; }
-.demo-link {
-  background: none;
-  border: 0;
-  padding: 0;
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: var(--lime);
-  text-decoration-thickness: 3px;
-  text-underline-offset: 3px;
-}
 @media (max-width: 991.98px) {
   .auth-shell { grid-template-columns: 1fr; }
   .auth-side { display: none; }
@@ -1059,3 +1046,28 @@ label, .form-label {
   .meter-grid { grid-template-columns: 1fr; }
   .decision-card { padding: 1.3rem 1.3rem 1.5rem; }
 }
+
+/* ---------- peta tempat ---------- */
+.place-map {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  z-index: 0;
+}
+.map-pin {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--lime);
+  color: #111;
+  font: 700 0.72rem/1 var(--font-mono, monospace);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.map-pin-result { background: var(--surface); color: var(--ink); }
+.map-pin-me { background: #4f8cff; color: #fff; }
+.leaflet-container { font-family: inherit; }
+.place-row:hover { background: color-mix(in srgb, var(--lime) 12%, transparent); }
