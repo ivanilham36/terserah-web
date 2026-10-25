@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 import { useNavigate, Navigate, Link } from 'react-router-dom'
 import { notifySuccess } from '../utils/notify'
 import AuthShell from '../components/common/AuthShell'
+import GoogleButton from '../components/common/GoogleButton'
 
 function Login() {
   //title page
@@ -17,7 +18,7 @@ function Login() {
   const navigate = useNavigate()
 
   //state user
-  const [email, setEmail] = useState('')
+  const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
 
   //state loading
@@ -34,7 +35,7 @@ function Login() {
     setLoading(true)
     setValidation({})
 
-    await Api.post('/api/auth/login', { email, password })
+    await Api.post('/api/auth/login', { login, password })
       .then((response) => {
         setLoading(false)
         //set cookie
@@ -63,15 +64,16 @@ function Login() {
       {validation.message && <div className="alert alert-danger py-2">{validation.message}</div>}
 
       <form onSubmit={loginHandler}>
-        <label className="mb-1">Email</label>
+        <label className="mb-1">Email atau username</label>
         <input
-          type="email"
+          type="text"
           className="form-control mb-1"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="nama@email.com"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          placeholder="nama@email.com atau username"
+          autoComplete="username"
         />
-        {validation.errors?.email && <div className="text-danger small mb-2">{validation.errors.email[0]}</div>}
+        {validation.errors?.login && <div className="text-danger small mb-2">{validation.errors.login[0]}</div>}
 
         <div className="d-flex justify-content-between align-items-end mt-3">
           <label className="mb-1">Password</label>
@@ -94,6 +96,8 @@ function Login() {
           {isLoading ? 'Memproses...' : 'Masuk'}
         </button>
       </form>
+
+      <GoogleButton />
 
       <div className="mt-3 small">
         Belum punya akun? <Link to="/register">Daftar</Link>

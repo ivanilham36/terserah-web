@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 import { useNavigate, Navigate, Link } from 'react-router-dom'
 import { notifySuccess } from '../utils/notify'
 import AuthShell from '../components/common/AuthShell'
+import GoogleButton from '../components/common/GoogleButton'
 
 function Register() {
   //title page
@@ -18,6 +19,7 @@ function Register() {
 
   //state form
   const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -32,7 +34,7 @@ function Register() {
     setLoading(true)
     setValidation({})
 
-    await Api.post('/api/auth/register', { name, email, password })
+    await Api.post('/api/auth/register', { name, username, email, password })
       .then((response) => {
         setLoading(false)
         //set cookie (register langsung login)
@@ -68,6 +70,17 @@ function Register() {
         />
         {validation.errors?.name && <div className="text-danger small mb-2">{validation.errors.name[0]}</div>}
 
+        <label className="mb-1 mt-3">Username</label>
+        <input
+          type="text"
+          className="form-control mb-1"
+          value={username}
+          onChange={(e) => setUsername(e.target.value.toLowerCase())}
+          placeholder="huruf kecil, angka, titik, underscore"
+          autoComplete="username"
+        />
+        {validation.errors?.username && <div className="text-danger small mb-2">{validation.errors.username[0]}</div>}
+
         <label className="mb-1 mt-3">Email</label>
         <input
           type="email"
@@ -94,6 +107,8 @@ function Register() {
           {isLoading ? 'Memproses...' : 'Daftar'}
         </button>
       </form>
+
+      <GoogleButton />
 
       <div className="mt-3 small">
         Sudah punya akun? <Link to="/login">Masuk</Link>
