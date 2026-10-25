@@ -355,7 +355,6 @@ function Landing() {
 
           <footer className="lp-footer">
             <span>&copy; 2026 Terserah!</span>
-            </span>
           </footer>
         </div>
       </main>
