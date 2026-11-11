@@ -1,4 +1,4 @@
-//import react router dom
+﻿//import react router dom
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 //import component private routes
@@ -9,6 +9,7 @@ import Landing from '../pages/Landing.jsx'
 import Login from '../pages/Login.jsx'
 import Register from '../pages/Register.jsx'
 import ForgotPassword from '../pages/ForgotPassword.jsx'
+import JoinLink from '../pages/JoinLink.jsx'
 import RoomsIndex from '../pages/rooms/Index.jsx'
 import RoomShow from '../pages/rooms/Show.jsx'
 import OptionsIndex from '../pages/options/Index.jsx'
@@ -24,6 +25,7 @@ function RoutesIndex() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/join/:code" element={<JoinLink />} />
 
       {/* private route */}
       <Route

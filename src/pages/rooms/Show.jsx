@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+﻿import React, { useState, useEffect, useCallback } from 'react'
 //import react router dom
 import { useParams, Link, useNavigate } from 'react-router-dom'
 //import react confirm alert
@@ -12,6 +12,7 @@ import { notifySuccess, notifyError, errorMessage } from '../../utils/notify'
 //import components
 import PreferenceForm from '../../components/rooms/PreferenceForm'
 import CandidatePicker from '../../components/rooms/CandidatePicker'
+import ShareRoom from '../../components/rooms/ShareRoom'
 import RankingList from '../../components/rooms/RankingList'
 import PlaceMap from '../../components/common/PlaceMap'
 import ReviewModal from '../../components/options/ReviewModal'
@@ -187,6 +188,7 @@ function RoomShow() {
             {room.code}
           </span>
           <div className="mt-2">
+            {open && <ShareRoom room={room} />}
             <button className="btn btn-sm btn-outline-danger" onClick={leaveHandler}>
               {isOwner ? 'Hapus ruang' : 'Keluar dari ruang'}
             </button>

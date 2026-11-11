@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 //import BASE URL API
 import Api from '../../api'
 //import layout
@@ -25,6 +25,28 @@ function RoomsIndex() {
   const [useLocation, setUseLocation] = useState(false)
   const [code, setCode] = useState('')
   const [meId, setMeId] = useState(null)
+
+  //gabung otomatis jika datang dari tautan undangan (/join/KODE)
+  useEffect(() => {
+    let pending = null
+    try {
+      pending = sessionStorage.getItem('terserah_join')
+      sessionStorage.removeItem('terserah_join')
+    } catch (e) {
+      pending = null
+    }
+    if (!pending) return
+    ;(async () => {
+      try {
+        const response = await Api.post('/api/rooms/join', { code: pending })
+        notifySuccess('Berhasil bergabung lewat tautan undangan.')
+        navigate(`/rooms/${response.data.id}`)
+      } catch (error) {
+        notifyError(errorMessage(error))
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   //ambil daftar ruang
   const fetchRooms = async () => {
